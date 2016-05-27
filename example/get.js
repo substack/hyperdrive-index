@@ -23,8 +23,12 @@ var dex = hdex({
   }
 })
 
-var name = process.argv[2]
-process.stdin.pipe(archive.createFileWriteStream(name))
+dex.ready(function () {
+  ndb.get(name, function (err, lines) {
+    if (err) console.error(err)
+    else console.log(lines)
+  })
+})
 
 function countLines (stream, cb) {
   var n = 0

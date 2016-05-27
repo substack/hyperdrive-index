@@ -7,7 +7,7 @@ var split = require('split2')
 var hdex = require('../')
 
 test('dex', function (t) {
-  t.plan(4)
+  t.plan(6)
   var db = memdb({ valueEncoding: 'json' })
   var drive = hyperdrive(memdb())
   var archive = drive.createArchive({ live: true })
@@ -42,6 +42,17 @@ test('dex', function (t) {
     db.get('cool.txt', function (err, n) {
       t.error(err)
       t.equal(n, 2)
+      archive.createFileWriteStream('cool.txt')
+        .once('finish', check2)
+        .end('beep\nboop\nwhatever\nzzz')
+    })
+  }
+  function check2 () {
+    dex.ready(function () {
+      db.get('cool.txt', function (err, n) {
+        t.error(err)
+        t.equal(n, 4)
+      })
     })
   }
 })

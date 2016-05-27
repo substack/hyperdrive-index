@@ -1,9 +1,7 @@
-var sub = require('subleveldown')
 var inherits = require('inherits')
 var EventEmitter = require('events').EventEmitter
+var defaults = require('levelup-defaults')
 var through = require('through2')
-
-var INFO = 'i', LOG = 'l'
 
 module.exports = Dex
 inherits(Dex, EventEmitter)
@@ -14,7 +12,7 @@ function Dex (opts) {
   EventEmitter.call(self)
   var map = opts.map
   var archive = opts.archive
-  var db = sub(opts.db, INFO, { valueEncoding: 'json' })
+  var db = defaults(opts.db, { valueEncoding: 'json' })
   self._pending = 1
 
   db.get('offset', function (err, offset) {

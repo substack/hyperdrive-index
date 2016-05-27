@@ -9,7 +9,9 @@ var db = level('/tmp/drive.db')
 var ndb = sub(db, 'lines', { valueEncoding: 'json' })
 
 var drive = hyperdrive(sub(db, 'drive'))
-var archive = drive.createArchive(process.argv[3])
+var link = process.argv[3] ? Buffer(process.argv[3], 'hex') : null
+var archive = drive.createArchive(link, { live: true })
+if (!link) console.log(archive.key.toString('hex'))
 
 var dex = hdex({
   archive: archive,

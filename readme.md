@@ -4,9 +4,6 @@ index changes to a [hyperdrive][1] feed
 
 [1]: https://npmjs.com/package/hyperdrive
 
-note: this package is waiting on a patch to land in hyperdrive core:
-https://github.com/mafintosh/hyperdrive/pull/51
-
 # example
 
 This example indexes the number of lines in each file written to hyperdrive.

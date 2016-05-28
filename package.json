@@ -1,6 +1,6 @@
 {
   "name": "hyperdrive-index",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "index changes to a hyperdrive feed",
   "main": "index.js",
   "dependencies": {

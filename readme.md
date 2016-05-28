@@ -2,6 +2,10 @@
 
 index changes to a [hyperdrive][1] feed
 
+Use this package to generate indexes to quickly answer questions about files
+written to hyperdrive. For example, you could create an index that parses exif
+headers and generates thumbnails for a p2p photo album served over a hyperdrive.
+
 [1]: https://npmjs.com/package/hyperdrive
 
 # example

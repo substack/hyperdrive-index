@@ -1,4 +1,5 @@
 var memdb = require('memdb')
+var mem = require('random-access-memory')
 var hyperdrive = require('hyperdrive')
 var test = require('tape')
 
@@ -9,13 +10,13 @@ var hdex = require('../')
 test('dex', function (t) {
   t.plan(6)
   var db = memdb({ valueEncoding: 'json' })
-  var drive = hyperdrive(memdb())
-  var archive = drive.createArchive({ live: true })
+  var archive = hyperdrive(mem)
   var dex = hdex({
     archive: archive,
     db: memdb(),
     map: function (entry, cb) {
-      var stream = archive.createFileReadStream(entry)
+      var ch = archive.checkout(entry.version)
+      var stream = ch.createReadStream(entry.name)
       countLines(stream, function (err, lines) {
         if (err) cb(err)
         else db.put(entry.name, lines, cb)
@@ -23,10 +24,10 @@ test('dex', function (t) {
     }
   })
   var pending = 2
-  archive.createFileWriteStream('hello.txt')
+  archive.createWriteStream('/hello.txt')
     .once('finish', done)
     .end('one\ntwo\nthree')
-  archive.createFileWriteStream('cool.txt')
+  archive.createWriteStream('/cool.txt')
     .once('finish', done)
     .end('beep\nboop')
 
@@ -35,21 +36,21 @@ test('dex', function (t) {
     dex.ready(ready)
   }
   function ready () {
-    db.get('hello.txt', function (err, n) {
+    db.get('/hello.txt', function (err, n) {
       t.error(err)
       t.equal(n, 3)
     })
-    db.get('cool.txt', function (err, n) {
+    db.get('/cool.txt', function (err, n) {
       t.error(err)
       t.equal(n, 2)
-      archive.createFileWriteStream('cool.txt')
+      archive.createWriteStream('/cool.txt')
         .once('finish', check2)
         .end('beep\nboop\nwhatever\nzzz')
     })
   }
   function check2 () {
     dex.ready(function () {
-      db.get('cool.txt', function (err, n) {
+      db.get('/cool.txt', function (err, n) {
         t.error(err)
         t.equal(n, 4)
       })

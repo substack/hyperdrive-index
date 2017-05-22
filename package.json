@@ -4,12 +4,15 @@
   "description": "index changes to a hyperdrive feed",
   "main": "index.js",
   "dependencies": {
+    "collect-stream": "^1.2.1",
     "inherits": "^2.0.1",
     "levelup-defaults": "^1.0.2",
+    "random-access-memory": "^2.4.0",
     "through2": "^2.0.1"
   },
   "devDependencies": {
-    "hyperdrive": "^5.1.5",
+    "hyperdrive": "^9.2.8",
+    "level": "^1.6.0",
     "memdb": "^1.3.1",
     "split2": "^2.0.1",
     "tape": "^4.5.1"

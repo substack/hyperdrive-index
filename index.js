@@ -2,6 +2,7 @@ var inherits = require('inherits')
 var EventEmitter = require('events').EventEmitter
 var defaults = require('levelup-defaults')
 var through = require('through2')
+var collect = require('collect-stream')
 
 module.exports = Dex
 inherits(Dex, EventEmitter)
@@ -22,7 +23,7 @@ function Dex (opts) {
     })
   })
   function nonlive (offset, cb) {
-    archive.list({ offset: offset, live: false }, onlist)
+    collect(archive.history({ offset: offset, live: false }), onlist)
     function onlist (err, entries) {
       if (err) return cb(err)
       var files = {}
@@ -43,7 +44,7 @@ function Dex (opts) {
     process.nextTick(function () {
       if (--self._pending === 0) self.emit('_ready')
     })
-    var r = archive.list({ offset: offset, live: true })
+    var r = archive.history({ offset: offset, live: true })
     var stream = through.obj(function (entry, enc, next) {
       self._pending++
       map(entry, function (err) {
